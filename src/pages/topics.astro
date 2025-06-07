@@ -3,54 +3,200 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Sidebar from '../components/Sidebar.astro';
 import Footer from '../components/Footer.astro';
-import { BookOpen, Users, Zap, Code } from 'lucide-astro';
+import { 
+  RocketLaunchIcon, 
+  ChatBubbleLeftRightIcon, 
+  LinkIcon, 
+  CircleStackIcon, 
+  CpuChipIcon, 
+  UserGroupIcon, 
+  AdjustmentsHorizontalIcon, 
+  ServerStackIcon, 
+  AcademicCapIcon, 
+  LightBulbIcon, 
+  GlobeAltIcon 
+} from '@heroicons/react/24/outline';
 
 const topicCategories = [
   {
-    name: "Getting Started",
-    description: "Foundation concepts and setup guides for LangChain beginners",
-    icon: BookOpen,
+    name: "LangChain Foundations: Getting Started",
+    description: "Lay the groundwork: Understand why LangChain exists, its core ideas, set up your environment, and build your first simple LLM app.",
+    icon: "RocketLaunchIcon",
+    color: "from-sky-500 to-indigo-500",
+    posts: [
+      { title: "Why LangChain? Tackling the Hurdles of LLM Application Development", date: "2024-07-01", slug: "why-langchain-llm-application-challenges" },
+      { title: "LangChain's Core Philosophy: Modularity, Abstraction, and Declarative Design", date: "2024-07-03", slug: "langchain-core-philosophy-architecture" },
+      { title: "Setting Up Your LangChain Dev Environment: A Step-by-Step Guide", date: "2024-07-05", slug: "setting-up-langchain-development-environment" },
+      { title: "My First LangChain App: Hello, LLM World!", date: "2024-07-08", slug: "first-langchain-app-hello-llm" }
+    ]
+  },
+  {
+    name: "Core Interactions: LLMs, Prompts & Parsers",
+    description: "Dive into the heart of LangChain: working with LLMs, crafting effective prompts, and structuring model outputs.",
+    icon: "ChatBubbleLeftRightIcon",
     color: "from-blue-500 to-cyan-500",
     posts: [
-      { title: "Introduction to LangChain", date: "2024-01-15", slug: "introduction-to-langchain" },
-      { title: "Setting Up Your Environment", date: "2024-01-16", slug: "setting-up-environment" },
-      { title: "Your First LangChain App", date: "2024-01-18", slug: "first-langchain-app" }
+      { title: "Understanding Models in LangChain: LLMs vs. ChatModels", date: "2024-07-10", slug: "langchain-models-llms-vs-chatmodels" },
+      { title: "Connecting to LLMs: OpenAI, Hugging Face, and Local Models with LangChain", date: "2024-07-12", slug: "langchain-llm-providers-openai-huggingface-local" },
+      { title: "Mastering Prompts in LangChain: The Art of Guiding LLMs", date: "2024-07-15", slug: "langchain-prompt-engineering-basics" },
+      { title: "ChatPromptTemplates: Crafting Effective Conversational Structures", date: "2024-07-17", slug: "langchain-chatprompttemplates-conversations" },
+      { title: "Advanced Prompting: Few-Shot Learning & Example Selectors", date: "2024-07-19", slug: "langchain-few-shot-prompting-example-selectors" },
+      { title: "Structuring LLM Outputs: An Introduction to LangChain Output Parsers", date: "2024-07-22", slug: "langchain-output-parsers-introduction" },
+      { title: "Practical Guide: Using Pydantic, JSON, and List Parsers in LangChain", date: "2024-07-24", slug: "langchain-pydantic-json-list-parsers" },
+      { title: "Handling Imperfect LLM Outputs: Retry and Correction Parsers", date: "2024-07-26", slug: "langchain-retry-correction-parsers" }
     ]
   },
   {
-    name: "Large Language Models",
-    description: "Understanding and working with different LLM providers and configurations",
-    icon: Zap,
-    color: "from-purple-500 to-pink-500",
-    posts: [
-      { title: "Understanding LLMs", date: "2024-01-20", slug: "understanding-llms" },
-      { title: "Working with OpenAI", date: "2024-01-22", slug: "working-with-openai" },
-      { title: "Local LLMs with Ollama", date: "2024-01-25", slug: "local-llms-ollama" }
-    ]
-  },
-  {
-    name: "Chains & Prompts",
-    description: "Building complex workflows and mastering prompt engineering techniques",
-    icon: Code,
+    name: "Orchestrating Workflows: Chains in LangChain",
+    description: "Learn to sequence calls and operations using LangChain Chains, from simple sequences to complex conditional logic.",
+    icon: "LinkIcon",
     color: "from-green-500 to-teal-500",
     posts: [
-      { title: "Prompt Engineering Basics", date: "2024-01-28", slug: "prompt-engineering-basics" },
-      { title: "Building Your First Chain", date: "2024-01-30", slug: "building-first-chain" },
-      { title: "Advanced Chain Patterns", date: "2024-02-02", slug: "advanced-chain-patterns" }
+      { title: "The Power of Chains: Sequencing Operations in LangChain", date: "2024-07-29", slug: "langchain-chains-sequencing-operations" },
+      { title: "LangChain Expression Language (LCEL): The Modern Way to Build Chains", date: "2024-07-31", slug: "langchain-expression-language-lcel-basics" },
+      { title: "LCEL Deep Dive: Runnables, Composition, and Streaming", date: "2024-08-02", slug: "langchain-lcel-deep-dive-runnables-streaming" },
+      { title: "Understanding Legacy Chains: LLMChain and SequentialChains", date: "2024-08-05", slug: "langchain-legacy-llmchain-sequentialchains" },
+      { title: "Dynamic Workflows: Router Chains for Conditional Logic", date: "2024-08-07", slug: "langchain-router-chains-conditional-logic" },
+      { title: "Building Custom Chains: Extending LangChain's Capabilities", date: "2024-08-09", slug: "langchain-building-custom-chains" }
     ]
   },
   {
-    name: "Agents & Tools",
-    description: "Creating autonomous agents and custom tools for complex problem solving",
-    icon: Users,
+    name: "Data-Powered LLMs: Retrieval Augmented Generation (RAG)",
+    description: "Enable your LLMs to access and use external knowledge through Retrieval Augmented Generation (RAG) techniques.",
+    icon: "CircleStackIcon",
+    color: "from-purple-500 to-pink-500",
+    posts: [
+      { title: "RAG Explained: Why Your LLM Needs External Knowledge", date: "2024-08-12", slug: "langchain-rag-explained-external-knowledge" },
+      { title: "Document Loaders: Ingesting Diverse Data Sources into LangChain", date: "2024-08-14", slug: "langchain-document-loaders" },
+      { title: "Text Splitters: Optimizing Documents for LLM Context Windows", date: "2024-08-16", slug: "langchain-text-splitters-chunking" },
+      { title: "Embeddings Demystified: Vectorizing Text for Semantic Understanding", date: "2024-08-19", slug: "langchain-embeddings-demystified" },
+      { title: "Vector Stores: Storing and Querying Text Embeddings Efficiently", date: "2024-08-21", slug: "langchain-vector-stores-overview" },
+      { title: "Choosing Your Vector Store: FAISS, Chroma, Pinecone, Weaviate & More", date: "2024-08-23", slug: "langchain-vector-store-comparison" },
+      { title: "Retrievers Deep Dive: Beyond Basic Similarity Search", date: "2024-08-26", slug: "langchain-retrievers-deep-dive" },
+      { title: "Advanced Retrieval: MultiQuery, SelfQuery & Contextual Compression", date: "2024-08-28", slug: "langchain-advanced-retrieval-strategies" },
+      { title: "Building Your First RAG System with LangChain: A Practical Guide", date: "2024-08-30", slug: "langchain-first-rag-system-guide" },
+      { title: "RAG Chain Types: Stuff, Map-Reduce, Refine, and Map-Rerank", date: "2024-09-02", slug: "langchain-rag-chain-types" }
+    ]
+  },
+  {
+    name: "Context is King: Memory in LangChain",
+    description: "Give your LangChain applications a memory to enable context-aware conversations and interactions.",
+    icon: "CpuChipIcon",
+    color: "from-amber-500 to-yellow-500",
+    posts: [
+      { title: "Why Memory Matters: Enabling Context in LLM Applications", date: "2024-09-04", slug: "langchain-memory-importance-context" },
+      { title: "Exploring LangChain Memory Types: Buffer, Summary, and Beyond", date: "2024-09-06", slug: "langchain-memory-types-overview" },
+      { title: "Short-Term Recall: Buffer and Window Memory in Practice", date: "2024-09-09", slug: "langchain-buffer-window-memory" },
+      { title: "Long-Term Context: Summary, Knowledge Graph, and Entity Memory", date: "2024-09-11", slug: "langchain-summary-kg-entity-memory" },
+      { title: "Integrating Memory into LangChain Chains and Agents", date: "2024-09-13", slug: "langchain-integrating-memory-chains-agents" },
+      { title: "Managing Memory Across Sessions and Users", date: "2024-09-16", slug: "langchain-managing-memory-sessions-users" }
+    ]
+  },
+  {
+    name: "Autonomous Actors: Agents & Tools",
+    description: "Empower LLMs to reason and act by building agents that can use tools to interact with the world.",
+    icon: "UserGroupIcon",
     color: "from-orange-500 to-red-500",
     posts: [
-      { title: "Introduction to Agents", date: "2024-02-05", slug: "introduction-to-agents" },
-      { title: "Custom Tools Development", date: "2024-02-08", slug: "custom-tools-development" },
-      { title: "Multi-Agent Systems", date: "2024-02-12", slug: "multi-agent-systems" }
+      { title: "Introduction to LangChain Agents: LLMs as Reasoning Engines", date: "2024-09-18", slug: "langchain-agents-introduction-reasoning-engines" },
+      { title: "Defining and Using Tools: Giving Agents Real-World Capabilities", date: "2024-09-20", slug: "langchain-defining-using-tools" },
+      { title: "Crafting Effective Tool Descriptions for Optimal Agent Performance", date: "2024-09-23", slug: "langchain-tool-descriptions-best-practices" },
+      { title: "A Tour of Agent Types: ReAct, OpenAI Functions/Tools, XML, and More", date: "2024-09-25", slug: "langchain-agent-types-react-openai-xml" },
+      { title: "The AgentExecutor: Orchestrating the Agent's Thought-Action Loop", date: "2024-09-27", slug: "langchain-agentexecutor-orchestration" },
+      { title: "Building Your First LangChain Agent: A Step-by-Step Tutorial", date: "2024-09-30", slug: "langchain-building-first-agent" },
+      { title: "Advanced Agent Architectures: Planning and Self-Correction", date: "2024-10-02", slug: "langchain-advanced-agent-architectures" },
+      { title: "Debugging LangChain Agents: Tips, Tricks, and LangSmith", date: "2024-10-04", slug: "langchain-debugging-agents-tips-tricks" }
+    ]
+  },
+  {
+    name: "Under the Hood: Callbacks in LangChain",
+    description: "Monitor, log, and customize the execution flow of your LangChain applications using Callbacks.",
+    icon: "AdjustmentsHorizontalIcon",
+    color: "from-lime-500 to-emerald-500",
+    posts: [
+      { title: "Understanding Callbacks: Hooking into LangChain's Execution Lifecycle", date: "2024-10-07", slug: "langchain-callbacks-introduction-lifecycle" },
+      { title: "Exploring Built-in Callback Handlers: Logging, Streaming, and More", date: "2024-10-09", slug: "langchain-builtin-callback-handlers" },
+      { title: "Implementing Custom Callback Handlers for Tailored Insights", date: "2024-10-11", slug: "langchain-custom-callback-handlers" },
+      { title: "Using Callbacks Effectively with Chains and Agents", date: "2024-10-14", slug: "langchain-callbacks-with-chains-agents" },
+      { title: "Streaming LLM Responses for Enhanced User Experience with Callbacks", date: "2024-10-16", slug: "langchain-streaming-responses-callbacks" }
+    ]
+  },
+  {
+    name: "Production Ready: LangSmith, Evaluation & Deployment",
+    description: "Take your LangChain apps from prototype to production with robust debugging, evaluation, and deployment strategies.",
+    icon: "ServerStackIcon",
+    color: "from-violet-500 to-fuchsia-500",
+    posts: [
+      { title: "LangSmith: Your Essential Toolkit for Tracing and Debugging LangChain Apps", date: "2024-10-18", slug: "langsmith-tracing-debugging-langchain" },
+      { title: "Getting Started with LangSmith: Setup, First Traces, and Datasets", date: "2024-10-21", slug: "langsmith-setup-first-traces-datasets" },
+      { title: "Evaluating LLM Applications: Key Metrics and Strategies", date: "2024-10-23", slug: "langchain-evaluating-llm-applications-metrics" },
+      { title: "LLM-as-Judge: Leveraging LLMs for Qualitative Evaluation of Responses", date: "2024-10-25", slug: "langchain-llm-as-judge-evaluation" },
+      { title: "Evaluating RAG Systems with RAGAs: Context, Faithfulness, and Relevance", date: "2024-10-28", slug: "langchain-rag-evaluation-ragas" },
+      { title: "LangServe: Effortlessly Deploying LangChain Apps as APIs", date: "2024-10-30", slug: "langchain-langserve-deploying-apis" },
+      { title: "Best Practices for Productionizing LangChain Applications", date: "2024-11-01", slug: "langchain-productionizing-best-practices" },
+      { title: "Managing Costs, Security, and Versioning in Production LLM Systems", date: "2024-11-04", slug: "langchain-production-costs-security-versioning" }
+    ]
+  },
+  {
+    name: "LangChain Advanced Techniques & Customization",
+    description: "Deepen your expertise with advanced LCEL usage, asynchronous operations, custom components, and the broader LangChain ecosystem.",
+    icon: "AcademicCapIcon",
+    color: "from-rose-500 to-pink-600",
+    posts: [
+      { title: "LCEL Deep Dive: Mastering RunnablePassthrough, Parallel, Lambda, and Config", date: "2024-11-06", slug: "langchain-lcel-advanced-runnables" },
+      { title: "Dynamic Configuration with RunnableConfigurableFields in LCEL", date: "2024-11-08", slug: "langchain-lcel-configurable-fields" },
+      { title: "Unlocking Performance: Asynchronous Operations (async/await) in LangChain", date: "2024-11-11", slug: "langchain-asynchronous-operations-async-await" },
+      { title: "Advanced Streaming Techniques for Real-time LLM Applications", date: "2024-11-13", slug: "langchain-advanced-streaming-techniques" },
+      { title: "Structuring Complex LangChain Projects: Code Organization and Best Practices", date: "2024-11-15", slug: "langchain-structuring-complex-projects" },
+      { title: "Building Custom LLM Wrappers, Parsers, and Retrievers in LangChain", date: "2024-11-18", slug: "langchain-custom-components-wrappers-parsers-retrievers" },
+      { title: "Navigating the LangChain Ecosystem: Core, Community, and Partner Packages", date: "2024-11-20", slug: "langchain-ecosystem-core-community-partners" },
+      { title: "Introduction to LangGraph: Building Cyclical and State-Driven Agentic Systems", date: "2024-11-22", slug: "langchain-langgraph-introduction-cyclical-agents" }
+    ]
+  },
+  {
+    name: "Capstone Project: Real-World LangChain",
+    description: "Apply your comprehensive LangChain knowledge to design, build, and document a significant capstone project.",
+    icon: "LightBulbIcon",
+    color: "from-teal-400 to-sky-600",
+    posts: [
+      { title: "Capstone Project Kickoff: Brainstorming Ideas for Your LangChain Masterpiece", date: "2024-11-25", slug: "langchain-capstone-project-ideation" },
+      { title: "Phase 1: Designing Your LangChain Application Architecture", date: "2024-11-27", slug: "langchain-capstone-design-architecture" },
+      { title: "Phase 2: Implementing Core Logic - Data, Chains, and Agents", date: "2024-11-29", slug: "langchain-capstone-implementation-core" },
+      { title: "Phase 3: Building Interfaces and Integrating Components", date: "2024-12-02", slug: "langchain-capstone-implementation-interfaces" },
+      { title: "Phase 4: Testing, Evaluating, and Refining Your Capstone Project", date: "2024-12-04", slug: "langchain-capstone-testing-evaluation" },
+      { title: "Documenting and Showcasing Your LangChain Capstone Project", date: "2024-12-06", slug: "langchain-capstone-documentation-showcase" },
+      { title: "Capstone Retrospective: Key Learnings and Future Enhancements", date: "2024-12-09", slug: "langchain-capstone-retrospective-learnings" }
+    ]
+  },
+  {
+    name: "The Evolving Landscape: Future of LangChain & LLMs",
+    description: "Stay ahead by exploring the future trends in LangChain, LLM applications, and responsible AI development.",
+    icon: "GlobeAltIcon",
+    color: "from-gray-700 to-gray-900",
+    posts: [
+      { title: "Keeping Pace with LangChain: Essential Resources and Communities", date: "2024-12-11", slug: "langchain-staying-updated-resources-communities" },
+      { title: "Emerging Trends in LLM Application Development: What's Next?", date: "2024-12-13", slug: "langchain-future-trends-llm-applications" },
+      { title: "LangChain's Place in the Broader AI and MLOps Ecosystem", date: "2024-12-16", slug: "langchain-role-ai-mlops-ecosystem" },
+      { title: "Beyond the Course: Specialized Areas for Continued LangChain Learning", date: "2024-12-18", slug: "langchain-continued-learning-specializations" },
+      { title: "Responsible AI Development with LangChain: Ethical Considerations", date: "2024-12-20", slug: "langchain-responsible-ai-ethics" }
     ]
   }
 ];
+
+// Icon mapping for rendering
+const iconMap = {
+  'RocketLaunchIcon': '🚀',
+  'ChatBubbleLeftRightIcon': '💬',
+  'LinkIcon': '🔗',
+  'CircleStackIcon': '🗄️',
+  'CpuChipIcon': '🧠',
+  'UserGroupIcon': '👥',
+  'AdjustmentsHorizontalIcon': '⚙️',
+  'ServerStackIcon': '🖥️',
+  'AcademicCapIcon': '🎓',
+  'LightBulbIcon': '💡',
+  'GlobeAltIcon': '🌐'
+};
 ---
 
 <Layout title="Learning Topics - LangChain Journey">
@@ -60,61 +206,102 @@ const topicCategories = [
     <Sidebar />
     
     <main class="flex-1 p-8">
-      <div class="max-w-4xl mx-auto">
+      <div class="max-w-6xl mx-auto">
         <!-- Page Header -->
         <div class="mb-12">
           <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            Learning Topics
+            LangChain Learning Journey
           </h1>
-          <p class="text-xl text-gray-600 dark:text-gray-300">
-            Explore my structured approach to mastering LangChain, organized by topic and complexity.
+          <p class="text-xl text-gray-600 dark:text-gray-300 mb-6">
+            A comprehensive, structured approach to mastering LangChain from foundations to advanced techniques.
           </p>
+          
+          <!-- Learning Path Stats -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-gray-50 dark:bg-gray-800 rounded-xl p-6">
+            <div class="text-center">
+              <div class="text-2xl font-bold text-primary-600 dark:text-primary-400">11</div>
+              <div class="text-sm text-gray-600 dark:text-gray-400">Learning Modules</div>
+            </div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-green-600 dark:text-green-400">75+</div>
+              <div class="text-sm text-gray-600 dark:text-gray-400">Detailed Posts</div>
+            </div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-purple-600 dark:text-purple-400">6</div>
+              <div class="text-sm text-gray-600 dark:text-gray-400">Months Duration</div>
+            </div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-orange-600 dark:text-orange-400">1</div>
+              <div class="text-sm text-gray-600 dark:text-gray-400">Capstone Project</div>
+            </div>
+          </div>
         </div>
         
         <!-- Topic Categories -->
         <div class="space-y-12">
-          {topicCategories.map((category, index) => {
-            const IconComponent = category.icon;
-            return (
-              <div class="animate-fade-in" style={`animation-delay: ${index * 0.1}s`}>
-                <!-- Category Header -->
-                <div class="flex items-center mb-6">
-                  <div class={`p-3 rounded-xl bg-gradient-to-r ${category.color} mr-4`}>
-                    <IconComponent class="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
-                      {category.name}
-                    </h2>
-                    <p class="text-gray-600 dark:text-gray-300">
-                      {category.description}
-                    </p>
-                  </div>
+          {topicCategories.map((category, index) => (
+            <div class="animate-fade-in" style={`animation-delay: ${index * 0.1}s`}>
+              <!-- Category Header -->
+              <div class="flex items-start mb-6">
+                <div class={`p-4 rounded-xl bg-gradient-to-r ${category.color} mr-6 flex-shrink-0`}>
+                  <span class="text-2xl">{iconMap[category.icon]}</span>
                 </div>
-                
-                <!-- Posts Grid -->
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {category.posts.map((post) => (
-                    <a 
-                      href={`/posts/${post.slug}`}
-                      class="group block p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
-                    >
-                      <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-200">
-                        {post.title}
-                      </h3>
-                      <p class="text-sm text-gray-500 dark:text-gray-400">
-                        {new Date(post.date).toLocaleDateString('en-US', { 
-                          month: 'long', 
-                          day: 'numeric',
-                          year: 'numeric'
-                        })}
-                      </p>
-                    </a>
-                  ))}
+                <div class="flex-1">
+                  <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                    {category.name}
+                  </h2>
+                  <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
+                    {category.description}
+                  </p>
+                  <div class="mt-3 text-sm text-gray-500 dark:text-gray-400">
+                    {category.posts.length} posts in this module
+                  </div>
                 </div>
               </div>
-            );
-          })}
+              
+              <!-- Posts Grid -->
+              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 ml-20">
+                {category.posts.map((post, postIndex) => (
+                  <a 
+                    href={`/posts/${post.slug}`}
+                    class="group block p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+                  >
+                    <div class="flex items-start justify-between mb-2">
+                      <span class="text-xs font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+                        {postIndex + 1}
+                      </span>
+                      <span class="text-xs text-gray-400 dark:text-gray-500">
+                        {new Date(post.date).toLocaleDateString('en-US', { 
+                          month: 'short', 
+                          day: 'numeric'
+                        })}
+                      </span>
+                    </div>
+                    <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-1 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-200 line-clamp-2">
+                      {post.title}
+                    </h3>
+                  </a>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        <!-- Learning Path Footer -->
+        <div class="mt-16 text-center bg-gradient-to-r from-primary-50 to-purple-50 dark:from-primary-900/20 dark:to-purple-900/20 rounded-2xl p-8">
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+            Ready to Start Your Journey?
+          </h3>
+          <p class="text-gray-600 dark:text-gray-300 mb-6 max-w-2xl mx-auto">
+            This comprehensive learning path will take you from LangChain beginner to expert. 
+            Each module builds upon the previous one, ensuring a solid foundation for advanced concepts.
+          </p>
+          <a 
+            href="/posts/why-langchain-llm-application-challenges"
+            class="inline-flex items-center px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg"
+          >
+            Begin Learning Journey
+          </a>
         </div>
       </div>
     </main>
@@ -122,3 +309,12 @@ const topicCategories = [
   
   <Footer />
 </Layout>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>
