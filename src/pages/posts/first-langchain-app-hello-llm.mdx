@@ -1,1 +1,166 @@
-(Content omitted)
+---
+layout: ../../layouts/PostLayout.astro
+title: "My First LangChain App: Hello, LLM World!"
+description: "Write your first lines of LangChain code. We'll build a simple application that takes a topic and asks an LLM to tell a joke about it, introducing the core concepts of Chains and LCEL."
+date: "2024-07-08"
+category: "Getting Started"
+readTime: "7 min read"
+---
+
+import { Zap, Code, Lightbulb, CheckCircle, PlayCircle } from 'lucide-astro';
+
+# My First LangChain App: Hello, LLM World!
+
+Your development environment is primed and ready. Now it's time for the magic moment: writing your first LangChain application. We'll start with the "Hello, World!" equivalent for LLM apps—a simple joke generator.
+
+This exercise will introduce you to the fundamental pattern of building with LangChain: **chaining components together.**
+
+<div class="alert-info">
+  <div class="flex items-start">
+    <Zap class="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-3 flex-shrink-0" />
+    <div>
+      <h4 class="font-semibold text-blue-900 dark:text-blue-100 mb-1">Our Goal</h4>
+      <p class="text-blue-800 dark:text-blue-200 text-sm">
+        Create a simple script that takes a topic (e.g., "robots") and uses LangChain and an OpenAI model to generate a joke about that topic.
+      </p>
+    </div>
+  </div>
+</div>
+
+## The Three Core Components
+
+Our simple app will be composed of three modular pieces, connected by the LangChain Expression Language (LCEL):
+
+1.  **Prompt Template:** Structures the user's input into a clear instruction for the LLM.
+2.  **Model:** The language model (in this case, from OpenAI) that will process the prompt.
+3.  **Output Parser:** Cleans up the model's response into a simple, usable format (like a string).
+
+---
+
+## Step 1: Create the Python Script
+
+Inside your `langchain-journey` directory, create a new file named `hello_llm.py`.
+
+```python
+# hello_llm.py
+
+import os
+from dotenv import load_dotenv
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Ensure the API key is available
+if os.getenv("OPENAI_API_KEY") is None:
+    print("Error: OPENAI_API_KEY is not set.")
+    exit()
+
+print("🚀 Initializing LangChain components...")
+
+# 1. Create a Prompt Template
+# This template will guide the LLM. The {topic} part is a variable we can fill in later.
+prompt_template = ChatPromptTemplate.from_template(
+    "Tell me a short, one-sentence joke about {topic}."
+)
+print("✅ Prompt template created.")
+
+# 2. Initialize the Model
+# We'll use OpenAI's gpt-3.5-turbo model. `temperature=0.5` makes it a bit creative.
+model = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.5)
+print("✅ OpenAI model initialized.")
+
+# 3. Create an Output Parser
+# This will simply take the model's output and convert it to a string.
+output_parser = StrOutputParser()
+print("✅ Output parser created.")
+
+# 4. Build the Chain using LangChain Expression Language (LCEL)
+# The pipe symbol `|` connects the components. Data flows from left to right.
+chain = prompt_template | model | output_parser
+print("🔗 Chain created successfully!")
+
+# 5. Invoke the Chain
+# We call the .invoke() method and pass a dictionary to fill in the {topic} variable.
+print("\n🤖 Asking the LLM for a joke about 'computers'...")
+response = chain.invoke({"topic": "computers"})
+
+print("\n🎉 Here's the response:")
+print("-" * 30)
+print(response)
+print("-" * 30)
+
+```
+
+## Step 2: Run Your First LangChain App
+
+Make sure your virtual environment is activated (`source .venv/bin/activate`) and your `.env` file is correctly set up. Then, run the script from your terminal:
+
+<div class="flex items-start bg-gray-50 dark:bg-gray-800 p-4 rounded-lg my-4">
+  <PlayCircle class="w-5 h-5 text-green-600 dark:text-green-400 mt-0.5 mr-3 flex-shrink-0" />
+  <code class="text-sm text-gray-800 dark:text-gray-200">
+    python hello_llm.py
+  </code>
+</div>
+
+You should see an output similar to this (the joke will vary):
+
+```text
+🚀 Initializing LangChain components...
+✅ Prompt template created.
+✅ OpenAI model initialized.
+✅ Output parser created.
+🔗 Chain created successfully!
+
+🤖 Asking the LLM for a joke about 'computers'...
+
+🎉 Here's the response:
+------------------------------
+Why did the computer keep sneezing? It had a virus!
+------------------------------
+```
+
+## Breaking Down the Magic
+
+<div class="alert-info">
+  <div class="flex items-start">
+    <Lightbulb class="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-3 flex-shrink-0" />
+    <div>
+      <h4 class="font-semibold text-blue-900 dark:text-blue-100 mb-1">The Core Concept: LCEL</h4>
+      <p class="text-blue-800 dark:text-blue-200 text-sm">
+        The line `chain = prompt_template | model | output_parser` is the heart of modern LangChain. It declaratively defines the flow of data:
+      </p>
+      <ol class="text-blue-800 dark:text-blue-200 text-sm list-decimal pl-5 mt-2">
+        <li>The input `{"topic": "computers"}` goes into the `prompt_template`.</li>
+        <li>The formatted prompt comes out and is piped into the `model`.</li>
+        <li>The model's complex response object comes out and is piped into the `output_parser`.</li>
+        <li>A clean string comes out as the final result.</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+## What We've Learned
+
+<div class="alert-success">
+  <div class="flex items-start">
+    <CheckCircle class="w-5 h-5 text-green-600 dark:text-green-400 mt-0.5 mr-3 flex-shrink-0" />
+    <div>
+      <h4 class="font-semibold text-green-900 dark:text-green-100 mb-1">Key Takeaways</h4>
+      <ul class="text-green-800 dark:text-green-200 text-sm space-y-1 list-disc pl-5">
+        <li>How to initialize the three basic components: a prompt, a model, and a parser.</li>
+        <li>How to use the pipe (`|`) operator (LCEL) to chain these components together.</li>
+        <li>How to use the `.invoke()` method to run a chain and get a result.</li>
+        <li>You've successfully built and run a complete, albeit simple, LLM application!</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+## Next Steps
+
+This was a fantastic start! You've seen the fundamental `Prompt + Model + Parser` pattern. But what exactly is a `ChatOpenAI` object? How does it differ from a regular `LLM` object?
+
+In our next post, we'll dive into the two primary types of models in LangChain—**LLMs vs. ChatModels**—and understand when and why to use each one.
