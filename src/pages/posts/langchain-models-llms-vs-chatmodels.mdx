@@ -1,1 +1,173 @@
-(Content omitted)
+---
+layout: ../../layouts/PostLayout.astro
+title: "Understanding Models in LangChain: LLMs vs. ChatModels"
+description: "Explore the key differences between the two main model types in LangChain, LLMs and ChatModels, and learn when to use each for optimal results in a Jupyter Notebook environment."
+date: "2024-07-10"
+category: "Core Interactions"
+readTime: "9 min read"
+---
+
+import { MessageSquare, Text, Lightbulb, CheckCircle, Notebook } from 'lucide-astro';
+
+# Understanding Models in LangChain: LLMs vs. ChatModels
+
+In our "Hello, LLM World!" app, we used `ChatOpenAI` to generate a joke. But you might see older tutorials or documentation using a different class, simply called `OpenAI`. Both are valid, but they represent two distinct and important concepts in LangChain: **LLMs** and **ChatModels**.
+
+Understanding the difference is crucial for building robust and effective applications. From now on, we'll present our code in a format that's easy to follow and run in a **Jupyter Notebook**, a fantastic tool for interactive development.
+
+<div class="alert-info">
+  <div class="flex items-start">
+    <Notebook class="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-3 flex-shrink-0" />
+    <div>
+      <h4 class="font-semibold text-blue-900 dark:text-blue-100 mb-1">Jupyter Notebook Setup</h4>
+      <p class="text-blue-800 dark:text-blue-200 text-sm">
+        For the following examples, make sure you're in your `langchain-journey` directory with the virtual environment activated. Start Jupyter Notebook by running: <code class="bg-blue-100 dark:bg-blue-800 px-1 rounded">jupyter notebook</code>
+      </p>
+    </div>
+  </div>
+</div>
+
+---
+
+## The `LLM` Class: A Simple Text-In, Text-Out Interface
+
+Think of the `LLM` class as the most basic way to interact with a language model. It's a simple wrapper that adheres to a straightforward contract:
+
+-   **Input:** A single string.
+-   **Output:** A single string.
+
+This makes it great for raw text completion tasks.
+
+### `LLM` Example in a Notebook
+
+Let's see it in action. In a new Jupyter cell:
+
+```python
+# Cell 1: Imports and Setup
+from dotenv import load_dotenv
+from langchain_openai import OpenAI # Note: We import OpenAI, not ChatOpenAI
+
+load_dotenv()
+print("Environment loaded.")
+```
+
+Now, let's instantiate and use the `LLM` class.
+
+```python
+# Cell 2: Using the LLM class
+llm = OpenAI(model="gpt-3.5-turbo-instruct", temperature=0.7)
+
+prompt = "In one sentence, what is the most important thing to know about the Roman Empire?"
+
+response = llm.invoke(prompt)
+
+print(type(response))
+print(response)
+```
+
+**Expected Output of Cell 2:**
+```text
+<class 'str'>
+The Roman Empire's legacy in law, architecture, and language has profoundly shaped Western civilization.
+```
+
+<div class="flex items-start bg-gray-50 dark:bg-gray-800 p-4 rounded-lg my-4">
+  <Text class="w-6 h-6 text-gray-600 dark:text-gray-400 mt-0.5 mr-4 flex-shrink-0" />
+  <div>
+    <h4 class="font-semibold text-gray-900 dark:text-white mb-1">`LLM` Class Summary</h4>
+    <p class="text-gray-700 dark:text-gray-300 text-sm">
+      Simple and direct. It's a legacy interface best suited for older, completion-style models.
+    </p>
+  </div>
+</div>
+
+---
+
+## The `ChatModel` Class: A Conversational, Structured Interface
+
+`ChatModels` are the modern, more powerful, and recommended way to interact with LLMs. They are designed for the back-and-forth nature of conversations.
+
+-   **Input:** A list of `ChatMessage` objects (e.g., `SystemMessage`, `HumanMessage`, `AIMessage`).
+-   **Output:** A single `AIMessage` object, which contains the content and other metadata.
+
+This structured approach allows you to provide much richer context and control.
+
+### `ChatModel` Example in a Notebook
+
+```python
+# Cell 3: Imports for ChatModels
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import HumanMessage, SystemMessage
+
+print("ChatModel imports loaded.")
+```
+
+Now, let's use the `ChatModel` class. Notice how we provide a list of messages.
+
+```python
+# Cell 4: Using the ChatModel class
+chat_model = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.7)
+
+messages = [
+    SystemMessage(content="You are a helpful historian who provides concise and accurate answers."),
+    HumanMessage(content="In one sentence, what is the most important thing to know about the Roman Empire?")
+]
+
+response = chat_model.invoke(messages)
+
+print(type(response))
+print(response)
+```
+
+**Expected Output of Cell 4:**
+```text
+<class 'langchain_core.messages.ai.AIMessage'>
+content="The Roman Empire's lasting legacy lies in its contributions to law, governance, engineering, and language, which became foundational pillars of Western civilization." response_metadata={'token_usage': {'completion_tokens': 31, 'prompt_tokens': 38, 'total_tokens': 69}, 'model_name': 'gpt-3.5-turbo', ...}
+```
+
+<div class="flex items-start bg-gray-50 dark:bg-gray-800 p-4 rounded-lg my-4">
+  <MessageSquare class="w-6 h-6 text-blue-600 dark:text-blue-400 mt-0.5 mr-4 flex-shrink-0" />
+  <div>
+    <h4 class="font-semibold text-gray-900 dark:text-white mb-1">`ChatModel` Class Summary</h4>
+    <p class="text-gray-700 dark:text-gray-300 text-sm">
+      Structured and powerful. It uses message roles (System, Human, AI) to provide context, making it ideal for conversations and complex instruction-following.
+    </p>
+  </div>
+</div>
+
+---
+
+## Side-by-Side Comparison
+
+| Feature             | `LLM` Class                               | `ChatModel` Class                                     |
+| ------------------- | ----------------------------------------- | ----------------------------------------------------- |
+| **Input Type**      | `string`                                  | `List[BaseMessage]`                                   |
+| **Output Type**     | `string`                                  | `BaseMessage` (usually `AIMessage`)                   |
+| **Primary Use**     | Simple text completion                    | Conversation, instruction-following, complex tasks    |
+| **Context**         | Stateless; context must be in the string  | Structured via message history and roles              |
+| **Best For**        | Older models (e.g., `text-davinci-003`)   | Modern models (e.g., `gpt-4`, `claude-3`, `gemini`) |
+| **Recommendation**  | **Legacy.** Use for specific simple tasks. | **Recommended for all new projects.**                 |
+
+## Why You Should Almost Always Use `ChatModels`
+
+<div class="alert-success">
+  <div class="flex items-start">
+    <CheckCircle class="w-5 h-5 text-green-600 dark:text-green-400 mt-0.5 mr-3 flex-shrink-0" />
+    <div>
+      <h4 class="font-semibold text-green-900 dark:text-green-100 mb-1">The Power of `SystemMessage`</h4>
+      <p class="text-green-800 dark:text-green-200 text-sm">
+        The single biggest advantage of `ChatModels` is the `SystemMessage`. It allows you to set the "persona" or high-level instructions for the AI for the entire conversation. This is far more effective than trying to cram instructions into a single prompt string and leads to more reliable and controllable behavior.
+      </p>
+    </div>
+  </div>
+</div>
+
+Modern LLMs are heavily optimized for this chat-based, instruction-following format. By using `ChatModels`, you are aligning your application with the way these powerful models were designed to work, which generally yields superior results even for non-conversational tasks.
+
+## Conclusion
+
+While both `LLM` and `ChatModel` classes provide access to the power of language models, they serve different purposes. The `LLM` class is a simple, raw text interface, while the `ChatModel` class provides a structured, conversational interface that is more powerful and better aligned with modern AI capabilities.
+
+**Rule of thumb: When starting a new project, always default to using a `ChatModel`.**
+
+Now that we understand how to interact with models, let's broaden our horizons. In the next post, we'll explore how to connect LangChain to different LLM providers, including OpenAI, Hugging Face, and even models running on your own machine.
