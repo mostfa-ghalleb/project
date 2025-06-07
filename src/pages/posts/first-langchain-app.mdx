@@ -1,0 +1,450 @@
+---
+layout: ../../layouts/PostLayout.astro
+title: "Your First LangChain App"
+description: "Building a complete LangChain application from scratch with proper architecture"
+date: "2024-01-18"
+category: "Getting Started"
+readTime: "10 min read"
+---
+
+import { AlertCircle, Code, CheckCircle, Lightbulb, Zap } from 'lucide-astro';
+
+# Your First LangChain App
+
+Now that we have our environment set up, let's build our first complete LangChain application! We'll create a smart document Q&A system that can answer questions about uploaded documents.
+
+## What We're Building
+
+<div class="alert-info">
+  <div class="flex items-start">
+    <Zap class="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-3 flex-shrink-0" />
+    <div>
+      <h4 class="font-semibold text-blue-900 dark:text-blue-100 mb-1">Project Overview</h4>
+      <p class="text-blue-800 dark:text-blue-200 text-sm">
+        A document Q&A system that can load text files, split them into chunks, create embeddings, and answer questions using retrieval-augmented generation (RAG).
+      </p>
+    </div>
+  </div>
+</div>
+
+## Project Architecture
+
+Our application will have these components:
+
+1. **Document Loader** - Load and process text files
+2. **Text Splitter** - Break documents into manageable chunks
+3. **Vector Store** - Store document embeddings for similarity search
+4. **Retrieval Chain** - Find relevant document chunks
+5. **Q&A Chain** - Generate answers based on retrieved context
+
+## Step 1: Install Additional Dependencies
+
+```bash
+pip install langchain-openai
+pip install chromadb
+pip install tiktoken
+pip install pypdf
+```
+
+## Step 2: Create the Document Loader
+
+Create `src/document_qa/loader.py`:
+
+```python
+from langchain.document_loaders import TextLoader, PyPDFLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from typing import List
+import os
+
+class DocumentLoader:
+    def __init__(self, chunk_size: int = 1000, chunk_overlap: int = 200):
+        self.text_splitter = RecursiveCharacterTextSplitter(
+            chunk_size=chunk_size,
+            chunk_overlap=chunk_overlap,
+            length_function=len,
+        )
+    
+    def load_text_file(self, file_path: str):
+        """Load a text file and split it into chunks."""
+        if not os.path.exists(file_path):
+            raise FileNotFoundError(f"File not found: {file_path}")
+        
+        loader = TextLoader(file_path)
+        documents = loader.load()
+        
+        # Split documents into chunks
+        chunks = self.text_splitter.split_documents(documents)
+        
+        print(f"Loaded {len(documents)} documents")
+        print(f"Split into {len(chunks)} chunks")
+        
+        return chunks
+    
+    def load_pdf_file(self, file_path: str):
+        """Load a PDF file and split it into chunks."""
+        if not os.path.exists(file_path):
+            raise FileNotFoundError(f"File not found: {file_path}")
+        
+        loader = PyPDFLoader(file_path)
+        documents = loader.load()
+        
+        chunks = self.text_splitter.split_documents(documents)
+        
+        print(f"Loaded {len(documents)} pages from PDF")
+        print(f"Split into {len(chunks)} chunks")
+        
+        return chunks
+```
+
+## Step 3: Create the Vector Store
+
+Create `src/document_qa/vector_store.py`:
+
+```python
+from langchain.vectorstores import Chroma
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.schema import Document
+from typing import List
+import os
+
+class VectorStoreManager:
+    def __init__(self, persist_directory: str = "./chroma_db"):
+        self.persist_directory = persist_directory
+        self.embeddings = OpenAIEmbeddings()
+        self.vector_store = None
+    
+    def create_vector_store(self, documents: List[Document]):
+        """Create a new vector store from documents."""
+        print("Creating vector store...")
+        
+        self.vector_store = Chroma.from_documents(
+            documents=documents,
+            embedding=self.embeddings,
+            persist_directory=self.persist_directory
+        )
+        
+        print(f"Vector store created with {len(documents)} documents")
+        return self.vector_store
+    
+    def load_vector_store(self):
+        """Load existing vector store."""
+        if os.path.exists(self.persist_directory):
+            self.vector_store = Chroma(
+                persist_directory=self.persist_directory,
+                embedding_function=self.embeddings
+            )
+            print("Loaded existing vector store")
+            return self.vector_store
+        else:
+            raise FileNotFoundError("No existing vector store found")
+    
+    def add_documents(self, documents: List[Document]):
+        """Add new documents to existing vector store."""
+        if self.vector_store is None:
+            raise ValueError("Vector store not initialized")
+        
+        self.vector_store.add_documents(documents)
+        print(f"Added {len(documents)} documents to vector store")
+    
+    def similarity_search(self, query: str, k: int = 4):
+        """Search for similar documents."""
+        if self.vector_store is None:
+            raise ValueError("Vector store not initialized")
+        
+        results = self.vector_store.similarity_search(query, k=k)
+        return results
+```
+
+## Step 4: Create the Q&A Chain
+
+Create `src/document_qa/qa_chain.py`:
+
+```python
+from langchain.chains import RetrievalQA
+from langchain.llms import OpenAI
+from langchain.prompts import PromptTemplate
+from langchain.schema import BaseRetriever
+
+class DocumentQAChain:
+    def __init__(self, retriever: BaseRetriever, temperature: float = 0):
+        self.llm = OpenAI(temperature=temperature)
+        self.retriever = retriever
+        
+        # Custom prompt template
+        self.prompt_template = PromptTemplate(
+            input_variables=["context", "question"],
+            template="""Use the following pieces of context to answer the question at the end. 
+            If you don't know the answer, just say that you don't know, don't try to make up an answer.
+
+            Context:
+            {context}
+
+            Question: {question}
+            
+            Answer: """
+        )
+        
+        # Create the QA chain
+        self.qa_chain = RetrievalQA.from_chain_type(
+            llm=self.llm,
+            chain_type="stuff",
+            retriever=self.retriever,
+            chain_type_kwargs={"prompt": self.prompt_template},
+            return_source_documents=True
+        )
+    
+    def ask_question(self, question: str):
+        """Ask a question and get an answer with sources."""
+        print(f"\nQuestion: {question}")
+        print("-" * 50)
+        
+        result = self.qa_chain({"query": question})
+        
+        answer = result["result"]
+        sources = result["source_documents"]
+        
+        print(f"Answer: {answer}")
+        print(f"\nSources ({len(sources)} documents):")
+        
+        for i, doc in enumerate(sources, 1):
+            print(f"{i}. {doc.page_content[:100]}...")
+            if hasattr(doc, 'metadata') and doc.metadata:
+                print(f"   Source: {doc.metadata}")
+        
+        return {
+            "answer": answer,
+            "sources": sources,
+            "question": question
+        }
+```
+
+## Step 5: Main Application
+
+Create `src/document_qa/app.py`:
+
+```python
+from dotenv import load_dotenv
+import os
+from .loader import DocumentLoader
+from .vector_store import VectorStoreManager
+from .qa_chain import DocumentQAChain
+
+class DocumentQAApp:
+    def __init__(self):
+        load_dotenv()
+        
+        # Verify API key
+        if not os.getenv("OPENAI_API_KEY"):
+            raise ValueError("OPENAI_API_KEY not found in environment variables")
+        
+        self.loader = DocumentLoader()
+        self.vector_manager = VectorStoreManager()
+        self.qa_chain = None
+    
+    def setup_from_file(self, file_path: str):
+        """Set up the Q&A system from a single file."""
+        print(f"Setting up Q&A system from: {file_path}")
+        
+        # Load and process document
+        if file_path.endswith('.pdf'):
+            documents = self.loader.load_pdf_file(file_path)
+        else:
+            documents = self.loader.load_text_file(file_path)
+        
+        # Create vector store
+        vector_store = self.vector_manager.create_vector_store(documents)
+        
+        # Create retriever
+        retriever = vector_store.as_retriever(
+            search_type="similarity",
+            search_kwargs={"k": 4}
+        )
+        
+        # Create Q&A chain
+        self.qa_chain = DocumentQAChain(retriever)
+        
+        print("✅ Q&A system ready!")
+    
+    def setup_from_existing_store(self):
+        """Set up Q&A system from existing vector store."""
+        print("Loading existing vector store...")
+        
+        vector_store = self.vector_manager.load_vector_store()
+        retriever = vector_store.as_retriever(
+            search_type="similarity",
+            search_kwargs={"k": 4}
+        )
+        
+        self.qa_chain = DocumentQAChain(retriever)
+        print("✅ Q&A system ready!")
+    
+    def ask(self, question: str):
+        """Ask a question."""
+        if self.qa_chain is None:
+            raise ValueError("Q&A system not set up. Call setup_from_file() first.")
+        
+        return self.qa_chain.ask_question(question)
+    
+    def interactive_mode(self):
+        """Start interactive Q&A session."""
+        if self.qa_chain is None:
+            raise ValueError("Q&A system not set up. Call setup_from_file() first.")
+        
+        print("\n🤖 Interactive Q&A Mode")
+        print("Type 'quit' to exit")
+        print("-" * 50)
+        
+        while True:
+            question = input("\nYour question: ").strip()
+            
+            if question.lower() in ['quit', 'exit', 'q']:
+                print("Goodbye! 👋")
+                break
+            
+            if not question:
+                continue
+            
+            try:
+                self.ask(question)
+            except Exception as e:
+                print(f"Error: {e}")
+```
+
+## Step 6: Create a Sample Document
+
+Create `sample_docs/langchain_intro.txt`:
+
+```text
+LangChain Introduction
+
+LangChain is a framework for developing applications powered by language models. 
+It enables applications that are data-aware and agentic, allowing language models 
+to connect with other sources of data and interact with their environment.
+
+Key Components:
+
+1. LLMs and Chat Models
+LangChain provides a standard interface for interacting with many different LLMs.
+This includes models from OpenAI, Anthropic, Hugging Face, and many others.
+
+2. Prompts
+Managing prompts and prompt templates is a key part of LangChain.
+The framework provides tools for prompt optimization and management.
+
+3. Chains
+Chains allow you to combine multiple components together to create a single, 
+coherent application. For example, you might create a chain that takes user 
+input, formats it with a prompt template, and then passes it to an LLM.
+
+4. Agents
+Agents use LLMs to determine which actions to take and in what order.
+They have access to a suite of tools and can decide which tool to use 
+based on the input they receive.
+
+5. Memory
+Memory refers to persisting state between calls of a chain/agent.
+LangChain provides several different memory implementations.
+
+Use Cases:
+- Question Answering over Documents
+- Chatbots
+- Agents that can use tools
+- Summarization
+- Code Generation
+- And many more!
+```
+
+## Step 7: Usage Example
+
+Create `main.py`:
+
+```python
+from src.document_qa.app import DocumentQAApp
+
+def main():
+    # Initialize the app
+    app = DocumentQAApp()
+    
+    # Set up from a document
+    app.setup_from_file("sample_docs/langchain_intro.txt")
+    
+    # Ask some questions
+    questions = [
+        "What is LangChain?",
+        "What are the key components of LangChain?",
+        "What are some use cases for LangChain?",
+        "How do agents work in LangChain?"
+    ]
+    
+    for question in questions:
+        result = app.ask(question)
+        print("\n" + "="*60 + "\n")
+    
+    # Start interactive mode
+    app.interactive_mode()
+
+if __name__ == "__main__":
+    main()
+```
+
+<div class="alert-warning">
+  <div class="flex items-start">
+    <AlertCircle class="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5 mr-3 flex-shrink-0" />
+    <div>
+      <h4 class="font-semibold text-amber-900 dark:text-amber-100 mb-1">Before Running</h4>
+      <p class="text-amber-800 dark:text-amber-200 text-sm">
+        Make sure you have your <code class="bg-amber-100 dark:bg-amber-800 px-1 rounded">OPENAI_API_KEY</code> set in your <code class="bg-amber-100 dark:bg-amber-800 px-1 rounded">.env</code> file!
+      </p>
+    </div>
+  </div>
+</div>
+
+## Running the Application
+
+```bash
+# Run the main application
+python main.py
+
+# Or run interactively
+python -c "
+from src.document_qa.app import DocumentQAApp
+app = DocumentQAApp()
+app.setup_from_file('sample_docs/langchain_intro.txt')
+app.interactive_mode()
+"
+```
+
+## What We Learned
+
+<div class="alert-info">
+  <div class="flex items-start">
+    <Lightbulb class="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-3 flex-shrink-0" />
+    <div>
+      <h4 class="font-semibold text-blue-900 dark:text-blue-100 mb-1">Key Concepts</h4>
+      <ul class="text-blue-800 dark:text-blue-200 text-sm space-y-1">
+        <li><strong>Document Loading:</strong> How to load and process different file types</li>
+        <li><strong>Text Splitting:</strong> Breaking large documents into manageable chunks</li>
+        <li><strong>Embeddings:</strong> Converting text to vector representations</li>
+        <li><strong>Vector Stores:</strong> Storing and searching embeddings efficiently</li>
+        <li><strong>Retrieval:</strong> Finding relevant context for questions</li>
+        <li><strong>Chain Composition:</strong> Combining components into a complete application</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+## Next Steps
+
+Now that you have a working LangChain application, you can:
+
+1. **Add more document types** (Word docs, web pages, etc.)
+2. **Experiment with different embedding models**
+3. **Try different LLMs** (Anthropic, local models)
+4. **Add conversation memory**
+5. **Build a web interface**
+
+In our next series, we'll dive deeper into understanding different LLM providers and their capabilities!
+
+---
+
+*This is post 3 of my LangChain learning series. We've built our first real application!*

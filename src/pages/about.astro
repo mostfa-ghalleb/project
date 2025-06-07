@@ -1,0 +1,131 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { Target, BookOpen, Code, Lightbulb } from 'lucide-astro';
+---
+
+<Layout title="About - LangChain Learning Journey">
+  <Header />
+  
+  <main class="py-16 bg-white dark:bg-gray-900">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Hero Section -->
+      <div class="text-center mb-16">
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-6">
+          About My Learning Journey
+        </h1>
+        <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+          Welcome to my personal documentation of learning LangChain from the ground up. 
+          This blog serves as both a learning tool and a resource for others on a similar path.
+        </p>
+      </div>
+      
+      <!-- Mission & Goals -->
+      <div class="grid md:grid-cols-2 gap-8 mb-16">
+        <div class="bg-gradient-to-br from-primary-50 to-blue-50 dark:from-primary-900/20 dark:to-blue-900/20 p-8 rounded-2xl">
+          <Target class="w-12 h-12 text-primary-600 dark:text-primary-400 mb-4" />
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">My Mission</h2>
+          <p class="text-gray-600 dark:text-gray-300">
+            To document every step of my LangChain learning journey, creating a comprehensive resource 
+            that helps others navigate the same path more efficiently.
+          </p>
+        </div>
+        
+        <div class="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 p-8 rounded-2xl">
+          <Lightbulb class="w-12 h-12 text-purple-600 dark:text-purple-400 mb-4" />
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Learning Philosophy</h2>
+          <p class="text-gray-600 dark:text-gray-300">
+            Learn by doing, document everything, and share knowledge openly. Every mistake is a 
+            learning opportunity, and every success is worth celebrating.
+          </p>
+        </div>
+      </div>
+      
+      <!-- Learning Approach -->
+      <div class="mb-16">
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
+          My Learning Approach
+        </h2>
+        
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="text-center">
+            <BookOpen class="w-16 h-16 text-primary-600 dark:text-primary-400 mx-auto mb-4" />
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+              Theory First
+            </h3>
+            <p class="text-gray-600 dark:text-gray-300">
+              Understanding the fundamental concepts before diving into implementation
+            </p>
+          </div>
+          
+          <div class="text-center">
+            <Code class="w-16 h-16 text-green-600 dark:text-green-400 mx-auto mb-4" />
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+              Hands-On Practice
+            </h3>
+            <p class="text-gray-600 dark:text-gray-300">
+              Building real projects and experimenting with different approaches
+            </p>
+          </div>
+          
+          <div class="text-center">
+            <Target class="w-16 h-16 text-orange-600 dark:text-orange-400 mx-auto mb-4" />
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+              Document Everything
+            </h3>
+            <p class="text-gray-600 dark:text-gray-300">
+              Recording insights, challenges, and solutions for future reference
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Current Progress -->
+      <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 mb-16">
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
+          Current Progress
+        </h2>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="text-center">
+            <div class="text-4xl font-bold text-primary-600 dark:text-primary-400 mb-2">12</div>
+            <div class="text-gray-600 dark:text-gray-300">Posts Written</div>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl font-bold text-green-600 dark:text-green-400 mb-2">4</div>
+            <div class="text-gray-600 dark:text-gray-300">Topics Covered</div>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl font-bold text-purple-600 dark:text-purple-400 mb-2">30+</div>
+            <div class="text-gray-600 dark:text-gray-300">Code Examples</div>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl font-bold text-orange-600 dark:text-orange-400 mb-2">8</div>
+            <div class="text-gray-600 dark:text-gray-300">Projects Built</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- What's Next -->
+      <div class="text-center">
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+          What's Coming Next
+        </h2>
+        <p class="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
+          I'm currently diving deeper into advanced agent architectures and exploring how to build 
+          production-ready LangChain applications. Stay tuned for more in-depth tutorials and real-world projects!
+        </p>
+        
+        <a 
+          href="/posts/introduction-to-langchain"
+          class="inline-flex items-center px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg"
+        >
+          Start Reading My Journey
+        </a>
+      </div>
+    </div>
+  </main>
+  
+  <Footer />
+</Layout>

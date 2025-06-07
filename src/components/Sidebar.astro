@@ -1,0 +1,83 @@
+---
+import { Calendar, ChevronRight, Hash } from 'lucide-astro';
+
+const topics = [
+  {
+    name: "Getting Started",
+    posts: [
+      { title: "Introduction to LangChain", date: "2024-01-15", slug: "introduction-to-langchain" },
+      { title: "Setting Up Your Environment", date: "2024-01-16", slug: "setting-up-environment" },
+      { title: "Your First LangChain App", date: "2024-01-18", slug: "first-langchain-app" }
+    ]
+  },
+  {
+    name: "Large Language Models",
+    posts: [
+      { title: "Understanding LLMs", date: "2024-01-20", slug: "understanding-llms" },
+      { title: "Working with OpenAI", date: "2024-01-22", slug: "working-with-openai" },
+      { title: "Local LLMs with Ollama", date: "2024-01-25", slug: "local-llms-ollama" }
+    ]
+  },
+  {
+    name: "Chains & Prompts",
+    posts: [
+      { title: "Prompt Engineering Basics", date: "2024-01-28", slug: "prompt-engineering-basics" },
+      { title: "Building Your First Chain", date: "2024-01-30", slug: "building-first-chain" },
+      { title: "Advanced Chain Patterns", date: "2024-02-02", slug: "advanced-chain-patterns" }
+    ]
+  },
+  {
+    name: "Agents & Tools",
+    posts: [
+      { title: "Introduction to Agents", date: "2024-02-05", slug: "introduction-to-agents" },
+      { title: "Custom Tools Development", date: "2024-02-08", slug: "custom-tools-development" },
+      { title: "Multi-Agent Systems", date: "2024-02-12", slug: "multi-agent-systems" }
+    ]
+  }
+];
+---
+
+<aside class="w-80 bg-gray-50 dark:bg-gray-800/50 border-r border-gray-200 dark:border-gray-700 overflow-y-auto">
+  <div class="p-6">
+    <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-6 flex items-center">
+      <Hash class="w-5 h-5 mr-2 text-primary-600 dark:text-primary-400" />
+      Learning Topics
+    </h2>
+    
+    <div class="space-y-6">
+      {topics.map((topic) => (
+        <div class="group">
+          <h3 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3 px-3 py-2 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+            {topic.name}
+          </h3>
+          
+          <div class="space-y-1 ml-2">
+            {topic.posts.map((post) => (
+              <a 
+                href={`/posts/${post.slug}`}
+                class="block p-3 rounded-lg hover:bg-white dark:hover:bg-gray-800 hover:shadow-sm transition-all duration-200 group/post border border-transparent hover:border-gray-200 dark:hover:border-gray-700"
+              >
+                <div class="flex items-start justify-between">
+                  <div class="flex-1 min-w-0">
+                    <h4 class="text-sm font-medium text-gray-900 dark:text-gray-100 group-hover/post:text-primary-600 dark:group-hover/post:text-primary-400 transition-colors duration-200 truncate">
+                      {post.title}
+                    </h4>
+                    <div class="flex items-center mt-1 text-xs text-gray-500 dark:text-gray-400">
+                      <Calendar class="w-3 h-3 mr-1" />
+                      {new Date(post.date).toLocaleDateString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric',
+                        year: 'numeric'
+                      })}
+                    </div>
+                  </div>
+                  <ChevronRight class="w-4 h-4 text-gray-400 group-hover/post:text-primary-600 dark:group-hover/post:text-primary-400 transition-colors duration-200 opacity-0 group-hover/post:opacity-100" />
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</aside>

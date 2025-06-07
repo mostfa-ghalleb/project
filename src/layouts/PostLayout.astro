@@ -1,0 +1,143 @@
+---
+import Layout from './Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { Calendar, Clock, ArrowLeft, ArrowRight, Share } from 'lucide-astro';
+
+const { frontmatter } = Astro.props;
+const { title, description, date, category, readTime } = frontmatter;
+
+// Mock navigation - in a real app, you'd generate this dynamically
+const navigation = {
+  prev: null,
+  next: {
+    title: "Setting Up Your Environment",
+    slug: "setting-up-environment"
+  }
+};
+---
+
+<Layout title={`${title} - LangChain Learning Journey`} description={description}>
+  <Header />
+  
+  <main class="py-8 bg-white dark:bg-gray-900 min-h-screen">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Back to Topics -->
+      <div class="mb-8">
+        <a 
+          href="/topics"
+          class="inline-flex items-center text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors duration-200"
+        >
+          <ArrowLeft class="w-4 h-4 mr-2" />
+          Back to Topics
+        </a>
+      </div>
+      
+      <!-- Article Header -->
+      <header class="mb-12">
+        <!-- Category Badge -->
+        <div class="inline-flex items-center px-3 py-1 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-sm font-medium mb-4">
+          {category}
+        </div>
+        
+        <!-- Title -->
+        <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
+          {title}
+        </h1>
+        
+        <!-- Meta Information -->
+        <div class="flex flex-wrap items-center gap-6 text-gray-600 dark:text-gray-400 mb-6">
+          <div class="flex items-center">
+            <Calendar class="w-4 h-4 mr-2" />
+            {new Date(date).toLocaleDateString('en-US', { 
+              month: 'long', 
+              day: 'numeric',
+              year: 'numeric'
+            })}
+          </div>
+          <div class="flex items-center">
+            <Clock class="w-4 h-4 mr-2" />
+            {readTime}
+          </div>
+          <button class="flex items-center hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200">
+            <Share class="w-4 h-4 mr-2" />
+            Share
+          </button>
+        </div>
+        
+        <!-- Description -->
+        {description && (
+          <p class="text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
+            {description}
+          </p>
+        )}
+      </header>
+      
+      <!-- Article Content -->
+      <article class="prose prose-lg dark:prose-invert max-w-none prose-headings:font-bold prose-headings:text-gray-900 dark:prose-headings:text-white prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-a:text-primary-600 dark:prose-a:text-primary-400 prose-code:text-primary-600 dark:prose-code:text-primary-400 prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-gray-900 dark:prose-pre:bg-gray-800 prose-pre:border prose-pre:border-gray-200 dark:prose-pre:border-gray-700">
+        <slot />
+      </article>
+      
+      <!-- Navigation -->
+      <nav class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-700">
+        <div class="flex justify-between items-center">
+          <div class="flex-1">
+            {navigation.prev && (
+              <a 
+                href={`/posts/${navigation.prev.slug}`}
+                class="group flex items-center p-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200"
+              >
+                <ArrowLeft class="w-5 h-5 mr-3 text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400" />
+                <div>
+                  <div class="text-sm text-gray-500 dark:text-gray-400">Previous</div>
+                  <div class="font-medium text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">
+                    {navigation.prev.title}
+                  </div>
+                </div>
+              </a>
+            )}
+          </div>
+          
+          <div class="flex-1 text-right">
+            {navigation.next && (
+              <a 
+                href={`/posts/${navigation.next.slug}`}
+                class="group flex items-center justify-end p-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200"
+              >
+                <div class="text-right">
+                  <div class="text-sm text-gray-500 dark:text-gray-400">Next</div>
+                  <div class="font-medium text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">
+                    {navigation.next.title}
+                  </div>
+                </div>
+                <ArrowRight class="w-5 h-5 ml-3 text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400" />
+              </a>
+            )}
+          </div>
+        </div>
+      </nav>
+    </div>
+  </main>
+  
+  <Footer />
+</Layout>
+
+<style>
+  /* Custom styles for better code highlighting */
+  .prose pre {
+    @apply bg-gray-900 dark:bg-gray-800;
+  }
+  
+  .prose code {
+    @apply text-sm;
+  }
+  
+  /* Custom alert boxes - these override prose styles */
+  .prose .alert-info {
+    @apply bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 my-6;
+  }
+  
+  .prose .alert-warning {
+    @apply bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 my-6;
+  }
+</style>

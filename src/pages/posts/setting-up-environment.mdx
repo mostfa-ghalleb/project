@@ -1,0 +1,320 @@
+---
+layout: ../../layouts/PostLayout.astro
+title: "Setting Up Your Environment"
+description: "Complete guide to setting up a professional LangChain development environment"
+date: "2024-01-16"
+category: "Getting Started"
+readTime: "7 min read"
+---
+
+import { AlertCircle, Code, CheckCircle, Terminal } from 'lucide-astro';
+
+# Setting Up Your Environment
+
+Before diving into LangChain development, it's crucial to set up a proper development environment. This guide will walk you through everything you need to get started professionally.
+
+## Prerequisites
+
+<div class="alert-info">
+  <div class="flex items-start">
+    <CheckCircle class="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-3 flex-shrink-0" />
+    <div>
+      <h4 class="font-semibold text-blue-900 dark:text-blue-100 mb-1">What You'll Need</h4>
+      <ul class="text-blue-800 dark:text-blue-200 text-sm space-y-1">
+        <li>Python 3.8 or higher</li>
+        <li>A code editor (VS Code recommended)</li>
+        <li>Git for version control</li>
+        <li>OpenAI API key (or other LLM provider)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+## Step 1: Python Environment Setup
+
+### Using Virtual Environments
+
+Always use virtual environments to isolate your LangChain projects:
+
+```bash
+# Create a new virtual environment
+python -m venv langchain-env
+
+# Activate it (Windows)
+langchain-env\Scripts\activate
+
+# Activate it (macOS/Linux)
+source langchain-env/bin/activate
+```
+
+### Installing LangChain
+
+```bash
+# Install LangChain with all extras
+pip install langchain[all]
+
+# Or install specific components
+pip install langchain
+pip install langchain-openai
+pip install langchain-community
+```
+
+## Step 2: IDE Configuration
+
+### VS Code Extensions
+
+Install these essential extensions for the best development experience:
+
+```json
+{
+  "recommendations": [
+    "ms-python.python",
+    "ms-python.black-formatter",
+    "ms-python.isort",
+    "ms-toolsai.jupyter",
+    "redhat.vscode-yaml",
+    "ms-vscode.vscode-json"
+  ]
+}
+```
+
+### Settings Configuration
+
+Create a `.vscode/settings.json` file in your project:
+
+```json
+{
+  "python.defaultInterpreterPath": "./langchain-env/bin/python",
+  "python.formatting.provider": "black",
+  "python.linting.enabled": true,
+  "python.linting.pylintEnabled": true,
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true
+  }
+}
+```
+
+## Step 3: Environment Variables
+
+### Creating a .env File
+
+Never hardcode API keys! Create a `.env` file:
+
+```bash
+# OpenAI Configuration
+OPENAI_API_KEY=your_openai_api_key_here
+OPENAI_ORGANIZATION=your_org_id_here
+
+# Other LLM Providers
+ANTHROPIC_API_KEY=your_anthropic_key_here
+HUGGINGFACE_API_TOKEN=your_hf_token_here
+
+# Database URLs
+DATABASE_URL=your_database_url_here
+
+# Logging
+LOG_LEVEL=INFO
+```
+
+<div class="alert-warning">
+  <div class="flex items-start">
+    <AlertCircle class="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5 mr-3 flex-shrink-0" />
+    <div>
+      <h4 class="font-semibold text-amber-900 dark:text-amber-100 mb-1">Security Note</h4>
+      <p class="text-amber-800 dark:text-amber-200 text-sm">
+        Always add <code class="bg-amber-100 dark:bg-amber-800 px-1 rounded">.env</code> to your <code class="bg-amber-100 dark:bg-amber-800 px-1 rounded">.gitignore</code> file to prevent accidentally committing API keys!
+      </p>
+    </div>
+  </div>
+</div>
+
+### Loading Environment Variables
+
+```python
+from dotenv import load_dotenv
+import os
+
+# Load environment variables
+load_dotenv()
+
+# Access them in your code
+openai_api_key = os.getenv("OPENAI_API_KEY")
+```
+
+## Step 4: Project Structure
+
+### Recommended Directory Structure
+
+```
+langchain-project/
+├── .env
+├── .gitignore
+├── requirements.txt
+├── README.md
+├── src/
+│   ├── __init__.py
+│   ├── chains/
+│   │   ├── __init__.py
+│   │   └── custom_chains.py
+│   ├── agents/
+│   │   ├── __init__.py
+│   │   └── custom_agents.py
+│   ├── tools/
+│   │   ├── __init__.py
+│   │   └── custom_tools.py
+│   └── utils/
+│       ├── __init__.py
+│       └── helpers.py
+├── tests/
+│   ├── __init__.py
+│   ├── test_chains.py
+│   └── test_agents.py
+├── notebooks/
+│   └── experiments.ipynb
+└── docs/
+    └── api.md
+```
+
+## Step 5: Dependencies Management
+
+### Creating requirements.txt
+
+```txt
+langchain==0.1.0
+langchain-openai==0.0.5
+langchain-community==0.0.10
+python-dotenv==1.0.0
+jupyter==1.0.0
+black==23.12.1
+pytest==7.4.3
+```
+
+### Using Poetry (Alternative)
+
+```bash
+# Initialize Poetry project
+poetry init
+
+# Add dependencies
+poetry add langchain langchain-openai python-dotenv
+
+# Add development dependencies
+poetry add --group dev black pytest jupyter
+```
+
+## Step 6: Testing Setup
+
+### Basic Test Configuration
+
+Create `tests/conftest.py`:
+
+```python
+import pytest
+import os
+from dotenv import load_dotenv
+
+@pytest.fixture(scope="session", autouse=True)
+def load_env():
+    load_env()
+
+@pytest.fixture
+def mock_openai_key():
+    return "test-key-12345"
+```
+
+### Sample Test
+
+Create `tests/test_basic.py`:
+
+```python
+import pytest
+from langchain.llms import OpenAI
+from langchain.prompts import PromptTemplate
+
+def test_prompt_template():
+    prompt = PromptTemplate(
+        input_variables=["topic"],
+        template="Tell me about {topic}"
+    )
+    
+    result = prompt.format(topic="Python")
+    assert "Python" in result
+    assert result == "Tell me about Python"
+```
+
+## Step 7: Logging Configuration
+
+### Setting Up Logging
+
+Create `src/utils/logging_config.py`:
+
+```python
+import logging
+import os
+from datetime import datetime
+
+def setup_logging():
+    log_level = os.getenv("LOG_LEVEL", "INFO")
+    
+    logging.basicConfig(
+        level=getattr(logging, log_level),
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        handlers=[
+            logging.FileHandler(f'logs/langchain_{datetime.now().strftime("%Y%m%d")}.log'),
+            logging.StreamHandler()
+        ]
+    )
+    
+    # Reduce noise from external libraries
+    logging.getLogger("openai").setLevel(logging.WARNING)
+    logging.getLogger("urllib3").setLevel(logging.WARNING)
+```
+
+## Verification
+
+### Test Your Setup
+
+Create `test_setup.py`:
+
+```python
+from dotenv import load_dotenv
+import os
+from langchain.llms import OpenAI
+
+def test_environment():
+    load_dotenv()
+    
+    # Check if API key is loaded
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        print("❌ OpenAI API key not found")
+        return False
+    
+    try:
+        # Test LangChain import
+        llm = OpenAI(temperature=0)
+        print("✅ LangChain setup successful")
+        return True
+    except Exception as e:
+        print(f"❌ Setup failed: {e}")
+        return False
+
+if __name__ == "__main__":
+    test_environment()
+```
+
+## Next Steps
+
+With your environment properly configured, you're ready to:
+
+1. **Build your first LangChain application**
+2. **Explore different LLM providers**
+3. **Create custom chains and agents**
+4. **Implement proper testing strategies**
+
+In the next post, we'll create our first complete LangChain application using this professional setup!
+
+---
+
+*This is post 2 of my LangChain learning series. A solid foundation makes everything else easier!*

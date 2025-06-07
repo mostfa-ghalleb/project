@@ -1,0 +1,121 @@
+---
+layout: ../../layouts/PostLayout.astro
+title: "Introduction to LangChain"
+description: "Getting started with LangChain - understanding the basics and core concepts"
+date: "2024-01-15"
+category: "Getting Started"
+readTime: "5 min read"
+---
+
+import { AlertCircle, Code, Lightbulb } from 'lucide-astro';
+
+# Introduction to LangChain
+
+Welcome to my LangChain learning journey! This is the first post in what will be a comprehensive documentation of my path from complete beginner to (hopefully) expert in LangChain.
+
+## What is LangChain?
+
+LangChain is a framework designed to simplify the creation of applications using large language models (LLMs). It provides a standard interface for chains, lots of integrations with other tools, and end-to-end chains for common applications.
+
+<div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 my-6">
+  <div class="flex items-start">
+    <Lightbulb class="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-3 flex-shrink-0" />
+    <div>
+      <h4 class="font-semibold text-blue-900 dark:text-blue-100 mb-1">Key Insight</h4>
+      <p class="text-blue-800 dark:text-blue-200 text-sm">
+        Think of LangChain as the "Rails" for LLM applications - it provides structure, conventions, and tools to build complex AI applications more easily.
+      </p>
+    </div>
+  </div>
+</div>
+
+## Core Components
+
+LangChain consists of several key components:
+
+### 1. **LLMs and Chat Models**
+- Interface with various language models
+- Support for OpenAI, Anthropic, Hugging Face, and more
+- Consistent API across different providers
+
+### 2. **Prompts**
+- Template management for prompts
+- Dynamic prompt generation
+- Prompt optimization tools
+
+### 3. **Chains**
+- Combine multiple components together
+- Sequential and parallel execution
+- Built-in chains for common patterns
+
+### 4. **Agents**
+- Use LLMs to determine actions
+- Access to tools and external APIs
+- Autonomous decision-making capabilities
+
+## My First LangChain Code
+
+Here's the classic "Hello World" example that got me started:
+
+```python
+from langchain.llms import OpenAI
+from langchain.prompts import PromptTemplate
+from langchain.chains import LLMChain
+
+# Initialize the LLM
+llm = OpenAI(temperature=0.7)
+
+# Create a prompt template
+prompt = PromptTemplate(
+    input_variables=["topic"],
+    template="Write a short poem about {topic}"
+)
+
+# Create a chain
+chain = LLMChain(llm=llm, prompt=prompt)
+
+# Run the chain
+result = chain.run("artificial intelligence")
+print(result)
+```
+
+<div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 my-6">
+  <div class="flex items-start">
+    <AlertCircle class="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5 mr-3 flex-shrink-0" />
+    <div>
+      <h4 class="font-semibold text-amber-900 dark:text-amber-100 mb-1">Important Note</h4>
+      <p class="text-amber-800 dark:text-amber-200 text-sm">
+        You'll need to set up your OpenAI API key as an environment variable: <code class="bg-amber-100 dark:bg-amber-800 px-1 rounded">OPENAI_API_KEY</code>
+      </p>
+    </div>
+  </div>
+</div>
+
+## What I Learned
+
+From this simple example, I discovered several important concepts:
+
+1. **Modularity**: Each component (LLM, Prompt, Chain) is separate and reusable
+2. **Flexibility**: Easy to swap out different LLMs or modify prompts
+3. **Simplicity**: Complex operations become simple method calls
+
+## Next Steps
+
+In my next post, I'll cover setting up a proper development environment for LangChain development, including:
+
+- Python environment setup
+- API key management
+- Development tools and IDEs
+- Testing frameworks
+
+## Resources
+
+Here are the resources I found most helpful when starting:
+
+- [Official LangChain Documentation](https://python.langchain.com/)
+- [LangChain GitHub Repository](https://github.com/langchain-ai/langchain)
+- [LangChain Discord Community](https://discord.gg/langchain)
+
+---
+
+*This is post 1 of my LangChain learning series. Follow along as I dive deeper into each component and build increasingly complex applications!*

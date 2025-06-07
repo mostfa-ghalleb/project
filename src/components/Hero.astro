@@ -1,0 +1,73 @@
+---
+import { ArrowRight, Sparkles, BookOpen, Code } from 'lucide-astro';
+---
+
+<section class="relative overflow-hidden bg-gradient-to-br from-primary-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-purple-900/20">
+  <!-- Background Pattern -->
+  <div class="absolute inset-0 bg-grid-pattern opacity-5"></div>
+  
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
+    <div class="text-center">
+      <!-- Badge -->
+      <div class="inline-flex items-center px-4 py-2 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-sm font-medium mb-8 animate-bounce-subtle">
+        <Sparkles class="w-4 h-4 mr-2" />
+        Learning Journey in Progress
+      </div>
+      
+      <!-- Main Heading -->
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 animate-fade-in">
+        My <span class="bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent">LangChain</span> Learning Journey
+      </h1>
+      
+      <!-- Subtitle -->
+      <p class="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed animate-fade-in">
+        Documenting my path from beginner to expert in LangChain. Follow along as I explore LLMs, chains, agents, and tools through hands-on projects and real-world applications.
+      </p>
+      
+      <!-- Stats -->
+      <div class="flex flex-wrap justify-center gap-8 mb-12 animate-fade-in">
+        <div class="text-center">
+          <div class="text-3xl font-bold text-primary-600 dark:text-primary-400">12</div>
+          <div class="text-sm text-gray-600 dark:text-gray-400">Posts Written</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-primary-600 dark:text-primary-400">4</div>
+          <div class="text-sm text-gray-600 dark:text-gray-400">Topics Covered</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-primary-600 dark:text-primary-400">30+</div>
+          <div class="text-sm text-gray-600 dark:text-gray-400">Code Examples</div>
+        </div>
+      </div>
+      
+      <!-- CTA Buttons -->
+      <div class="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in">
+        <a 
+          href="/posts/introduction-to-langchain"
+          class="inline-flex items-center px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg group"
+        >
+          <BookOpen class="w-5 h-5 mr-2" />
+          Start Reading
+          <ArrowRight class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-200" />
+        </a>
+        
+        <a 
+          href="/topics"
+          class="inline-flex items-center px-8 py-4 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-900 dark:text-white font-medium rounded-xl border border-gray-200 dark:border-gray-700 transition-all duration-200 hover:scale-105 hover:shadow-lg group"
+        >
+          <Code class="w-5 h-5 mr-2" />
+          Browse Topics
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .bg-grid-pattern {
+    background-image: 
+      linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+</style>

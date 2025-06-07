@@ -1,0 +1,124 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Sidebar from '../components/Sidebar.astro';
+import Footer from '../components/Footer.astro';
+import { BookOpen, Users, Zap, Code } from 'lucide-astro';
+
+const topicCategories = [
+  {
+    name: "Getting Started",
+    description: "Foundation concepts and setup guides for LangChain beginners",
+    icon: BookOpen,
+    color: "from-blue-500 to-cyan-500",
+    posts: [
+      { title: "Introduction to LangChain", date: "2024-01-15", slug: "introduction-to-langchain" },
+      { title: "Setting Up Your Environment", date: "2024-01-16", slug: "setting-up-environment" },
+      { title: "Your First LangChain App", date: "2024-01-18", slug: "first-langchain-app" }
+    ]
+  },
+  {
+    name: "Large Language Models",
+    description: "Understanding and working with different LLM providers and configurations",
+    icon: Zap,
+    color: "from-purple-500 to-pink-500",
+    posts: [
+      { title: "Understanding LLMs", date: "2024-01-20", slug: "understanding-llms" },
+      { title: "Working with OpenAI", date: "2024-01-22", slug: "working-with-openai" },
+      { title: "Local LLMs with Ollama", date: "2024-01-25", slug: "local-llms-ollama" }
+    ]
+  },
+  {
+    name: "Chains & Prompts",
+    description: "Building complex workflows and mastering prompt engineering techniques",
+    icon: Code,
+    color: "from-green-500 to-teal-500",
+    posts: [
+      { title: "Prompt Engineering Basics", date: "2024-01-28", slug: "prompt-engineering-basics" },
+      { title: "Building Your First Chain", date: "2024-01-30", slug: "building-first-chain" },
+      { title: "Advanced Chain Patterns", date: "2024-02-02", slug: "advanced-chain-patterns" }
+    ]
+  },
+  {
+    name: "Agents & Tools",
+    description: "Creating autonomous agents and custom tools for complex problem solving",
+    icon: Users,
+    color: "from-orange-500 to-red-500",
+    posts: [
+      { title: "Introduction to Agents", date: "2024-02-05", slug: "introduction-to-agents" },
+      { title: "Custom Tools Development", date: "2024-02-08", slug: "custom-tools-development" },
+      { title: "Multi-Agent Systems", date: "2024-02-12", slug: "multi-agent-systems" }
+    ]
+  }
+];
+---
+
+<Layout title="Learning Topics - LangChain Journey">
+  <Header />
+  
+  <div class="flex min-h-screen bg-white dark:bg-gray-900">
+    <Sidebar />
+    
+    <main class="flex-1 p-8">
+      <div class="max-w-4xl mx-auto">
+        <!-- Page Header -->
+        <div class="mb-12">
+          <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            Learning Topics
+          </h1>
+          <p class="text-xl text-gray-600 dark:text-gray-300">
+            Explore my structured approach to mastering LangChain, organized by topic and complexity.
+          </p>
+        </div>
+        
+        <!-- Topic Categories -->
+        <div class="space-y-12">
+          {topicCategories.map((category, index) => {
+            const IconComponent = category.icon;
+            return (
+              <div class="animate-fade-in" style={`animation-delay: ${index * 0.1}s`}>
+                <!-- Category Header -->
+                <div class="flex items-center mb-6">
+                  <div class={`p-3 rounded-xl bg-gradient-to-r ${category.color} mr-4`}>
+                    <IconComponent class="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+                      {category.name}
+                    </h2>
+                    <p class="text-gray-600 dark:text-gray-300">
+                      {category.description}
+                    </p>
+                  </div>
+                </div>
+                
+                <!-- Posts Grid -->
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {category.posts.map((post) => (
+                    <a 
+                      href={`/posts/${post.slug}`}
+                      class="group block p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+                    >
+                      <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-200">
+                        {post.title}
+                      </h3>
+                      <p class="text-sm text-gray-500 dark:text-gray-400">
+                        {new Date(post.date).toLocaleDateString('en-US', { 
+                          month: 'long', 
+                          day: 'numeric',
+                          year: 'numeric'
+                        })}
+                      </p>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </main>
+  </div>
+  
+  <Footer />
+</Layout>

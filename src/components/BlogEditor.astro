@@ -1,0 +1,471 @@
+---
+import { Bold, Italic, Code, Link, List, Quote, Image, Save, Eye, Plus } from 'lucide-astro';
+---
+
+<div class="blog-editor bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg">
+  <!-- Editor Toolbar -->
+  <div class="border-b border-gray-200 dark:border-gray-700 p-4">
+    <div class="flex flex-wrap items-center gap-2">
+      <!-- Text Formatting -->
+      <div class="flex items-center gap-1 border-r border-gray-200 dark:border-gray-700 pr-3">
+        <button class="editor-btn" data-action="bold" title="Bold (Ctrl+B)">
+          <Bold class="w-4 h-4" />
+        </button>
+        <button class="editor-btn" data-action="italic" title="Italic (Ctrl+I)">
+          <Italic class="w-4 h-4" />
+        </button>
+        <button class="editor-btn" data-action="code" title="Inline Code">
+          <Code class="w-4 h-4" />
+        </button>
+      </div>
+      
+      <!-- Structure -->
+      <div class="flex items-center gap-1 border-r border-gray-200 dark:border-gray-700 pr-3">
+        <select class="editor-select" data-action="heading">
+          <option value="">Paragraph</option>
+          <option value="h1"># Heading 1</option>
+          <option value="h2">## Heading 2</option>
+          <option value="h3">### Heading 3</option>
+          <option value="h4">#### Heading 4</option>
+        </select>
+        <button class="editor-btn" data-action="list" title="Bullet List">
+          <List class="w-4 h-4" />
+        </button>
+        <button class="editor-btn" data-action="quote" title="Quote">
+          <Quote class="w-4 h-4" />
+        </button>
+      </div>
+      
+      <!-- Links & Media -->
+      <div class="flex items-center gap-1 border-r border-gray-200 dark:border-gray-700 pr-3">
+        <button class="editor-btn" data-action="link" title="Insert Link">
+          <Link class="w-4 h-4" />
+        </button>
+        <button class="editor-btn" data-action="image" title="Insert Image">
+          <Image class="w-4 h-4" />
+        </button>
+      </div>
+      
+      <!-- Special Components -->
+      <div class="flex items-center gap-1 border-r border-gray-200 dark:border-gray-700 pr-3">
+        <button class="editor-btn" data-action="alert-info" title="Info Alert">
+          <div class="w-4 h-4 bg-blue-500 rounded-sm"></div>
+        </button>
+        <button class="editor-btn" data-action="alert-warning" title="Warning Alert">
+          <div class="w-4 h-4 bg-amber-500 rounded-sm"></div>
+        </button>
+        <button class="editor-btn" data-action="code-block" title="Code Block">
+          <div class="w-4 h-4 bg-gray-700 rounded-sm"></div>
+        </button>
+      </div>
+      
+      <!-- Actions -->
+      <div class="flex items-center gap-1 ml-auto">
+        <button class="editor-btn-primary" data-action="preview">
+          <Eye class="w-4 h-4 mr-2" />
+          Preview
+        </button>
+        <button class="editor-btn-primary" data-action="save">
+          <Save class="w-4 h-4 mr-2" />
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Editor Content -->
+  <div class="flex">
+    <!-- Editor Textarea -->
+    <div class="flex-1">
+      <textarea 
+        id="blog-editor"
+        class="w-full h-96 p-4 bg-transparent border-none resize-none focus:outline-none text-gray-900 dark:text-gray-100 font-mono text-sm leading-relaxed"
+        placeholder="Start writing your blog post in Markdown..."
+      ></textarea>
+    </div>
+    
+    <!-- Live Preview (hidden by default) -->
+    <div id="preview-pane" class="flex-1 border-l border-gray-200 dark:border-gray-700 p-4 hidden overflow-y-auto h-96">
+      <div class="prose dark:prose-invert max-w-none" id="preview-content">
+        <p class="text-gray-500 dark:text-gray-400">Preview will appear here...</p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Quick Insert Panel -->
+  <div class="border-t border-gray-200 dark:border-gray-700 p-4 bg-gray-50 dark:bg-gray-800">
+    <div class="flex flex-wrap gap-2">
+      <button class="quick-insert-btn" data-template="frontmatter">
+        <Plus class="w-3 h-3 mr-1" />
+        Frontmatter
+      </button>
+      <button class="quick-insert-btn" data-template="alert-info">
+        <Plus class="w-3 h-3 mr-1" />
+        Info Box
+      </button>
+      <button class="quick-insert-btn" data-template="alert-warning">
+        <Plus class="w-3 h-3 mr-1" />
+        Warning Box
+      </button>
+      <button class="quick-insert-btn" data-template="code-python">
+        <Plus class="w-3 h-3 mr-1" />
+        Python Code
+      </button>
+      <button class="quick-insert-btn" data-template="code-bash">
+        <Plus class="w-3 h-3 mr-1" />
+        Bash Code
+      </button>
+      <button class="quick-insert-btn" data-template="section">
+        <Plus class="w-3 h-3 mr-1" />
+        New Section
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .editor-btn {
+    @apply p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100;
+  }
+  
+  .editor-btn-primary {
+    @apply px-3 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors duration-200 flex items-center text-sm font-medium;
+  }
+  
+  .editor-select {
+    @apply px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100;
+  }
+  
+  .quick-insert-btn {
+    @apply px-3 py-1 text-xs bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-200 flex items-center text-gray-700 dark:text-gray-300;
+  }
+</style>
+
+<script>
+  // Blog Editor Functionality
+  class BlogEditor {
+    constructor() {
+      this.editor = document.getElementById('blog-editor');
+      this.previewPane = document.getElementById('preview-pane');
+      this.previewContent = document.getElementById('preview-content');
+      this.isPreviewMode = false;
+      
+      this.initializeEventListeners();
+      this.loadTemplates();
+    }
+    
+    initializeEventListeners() {
+      // Toolbar buttons
+      document.querySelectorAll('[data-action]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.handleAction(btn.dataset.action);
+        });
+      });
+      
+      // Quick insert buttons
+      document.querySelectorAll('[data-template]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.insertTemplate(btn.dataset.template);
+        });
+      });
+      
+      // Keyboard shortcuts
+      this.editor.addEventListener('keydown', (e) => {
+        if (e.ctrlKey || e.metaKey) {
+          switch(e.key) {
+            case 'b':
+              e.preventDefault();
+              this.handleAction('bold');
+              break;
+            case 'i':
+              e.preventDefault();
+              this.handleAction('italic');
+              break;
+            case 's':
+              e.preventDefault();
+              this.handleAction('save');
+              break;
+          }
+        }
+      });
+      
+      // Auto-save
+      this.editor.addEventListener('input', () => {
+        if (this.isPreviewMode) {
+          this.updatePreview();
+        }
+        this.autoSave();
+      });
+    }
+    
+    handleAction(action) {
+      const start = this.editor.selectionStart;
+      const end = this.editor.selectionEnd;
+      const selectedText = this.editor.value.substring(start, end);
+      
+      switch(action) {
+        case 'bold':
+          this.wrapText('**', '**', 'bold text');
+          break;
+        case 'italic':
+          this.wrapText('*', '*', 'italic text');
+          break;
+        case 'code':
+          this.wrapText('`', '`', 'code');
+          break;
+        case 'link':
+          this.insertLink();
+          break;
+        case 'image':
+          this.insertImage();
+          break;
+        case 'list':
+          this.insertList();
+          break;
+        case 'quote':
+          this.insertQuote();
+          break;
+        case 'heading':
+          this.insertHeading(event.target.value);
+          break;
+        case 'preview':
+          this.togglePreview();
+          break;
+        case 'save':
+          this.savePost();
+          break;
+        case 'alert-info':
+          this.insertTemplate('alert-info');
+          break;
+        case 'alert-warning':
+          this.insertTemplate('alert-warning');
+          break;
+        case 'code-block':
+          this.insertTemplate('code-python');
+          break;
+      }
+    }
+    
+    wrapText(before, after, placeholder) {
+      const start = this.editor.selectionStart;
+      const end = this.editor.selectionEnd;
+      const selectedText = this.editor.value.substring(start, end);
+      const text = selectedText || placeholder;
+      
+      const newText = before + text + after;
+      this.replaceSelection(newText);
+      
+      // Select the inserted text (excluding wrapper)
+      if (!selectedText) {
+        this.editor.setSelectionRange(start + before.length, start + before.length + text.length);
+      }
+    }
+    
+    replaceSelection(text) {
+      const start = this.editor.selectionStart;
+      const end = this.editor.selectionEnd;
+      const value = this.editor.value;
+      
+      this.editor.value = value.substring(0, start) + text + value.substring(end);
+      this.editor.focus();
+    }
+    
+    insertLink() {
+      const url = prompt('Enter URL:');
+      if (url) {
+        const text = prompt('Enter link text:') || url;
+        this.replaceSelection(`[${text}](${url})`);
+      }
+    }
+    
+    insertImage() {
+      const url = prompt('Enter image URL:');
+      if (url) {
+        const alt = prompt('Enter alt text:') || 'Image';
+        this.replaceSelection(`![${alt}](${url})`);
+      }
+    }
+    
+    insertList() {
+      const start = this.editor.selectionStart;
+      const lines = this.editor.value.substring(0, start).split('\n');
+      const currentLine = lines[lines.length - 1];
+      
+      if (currentLine.trim() === '') {
+        this.replaceSelection('- ');
+      } else {
+        this.replaceSelection('\n- ');
+      }
+    }
+    
+    insertQuote() {
+      const start = this.editor.selectionStart;
+      const lines = this.editor.value.substring(0, start).split('\n');
+      const currentLine = lines[lines.length - 1];
+      
+      if (currentLine.trim() === '') {
+        this.replaceSelection('> ');
+      } else {
+        this.replaceSelection('\n> ');
+      }
+    }
+    
+    insertHeading(level) {
+      if (!level) return;
+      
+      const start = this.editor.selectionStart;
+      const lines = this.editor.value.substring(0, start).split('\n');
+      const currentLine = lines[lines.length - 1];
+      
+      const prefix = level === 'h1' ? '# ' : level === 'h2' ? '## ' : level === 'h3' ? '### ' : '#### ';
+      
+      if (currentLine.trim() === '') {
+        this.replaceSelection(prefix);
+      } else {
+        this.replaceSelection('\n' + prefix);
+      }
+    }
+    
+    togglePreview() {
+      this.isPreviewMode = !this.isPreviewMode;
+      
+      if (this.isPreviewMode) {
+        this.previewPane.classList.remove('hidden');
+        this.updatePreview();
+      } else {
+        this.previewPane.classList.add('hidden');
+      }
+    }
+    
+    updatePreview() {
+      // Simple markdown to HTML conversion (basic implementation)
+      let html = this.editor.value
+        .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+        .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+        .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+        .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
+        .replace(/\*(.*)\*/gim, '<em>$1</em>')
+        .replace(/`(.*)`/gim, '<code>$1</code>')
+        .replace(/\n/gim, '<br>');
+      
+      this.previewContent.innerHTML = html;
+    }
+    
+    loadTemplates() {
+      this.templates = {
+        frontmatter: `---
+layout: ../../layouts/PostLayout.astro
+title: "Your Post Title"
+description: "Brief description of your post"
+date: "${new Date().toISOString().split('T')[0]}"
+category: "Getting Started"
+readTime: "5 min read"
+---
+
+`,
+        'alert-info': `
+<div class="alert-info">
+  <div class="flex items-start">
+    <CheckCircle class="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-3 flex-shrink-0" />
+    <div>
+      <h4 class="font-semibold text-blue-900 dark:text-blue-100 mb-1">Info Title</h4>
+      <p class="text-blue-800 dark:text-blue-200 text-sm">
+        Your info message here.
+      </p>
+    </div>
+  </div>
+</div>
+
+`,
+        'alert-warning': `
+<div class="alert-warning">
+  <div class="flex items-start">
+    <AlertCircle class="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5 mr-3 flex-shrink-0" />
+    <div>
+      <h4 class="font-semibold text-amber-900 dark:text-amber-100 mb-1">Warning Title</h4>
+      <p class="text-amber-800 dark:text-amber-200 text-sm">
+        Your warning message here.
+      </p>
+    </div>
+  </div>
+</div>
+
+`,
+        'code-python': `
+\`\`\`python
+# Your Python code here
+def example_function():
+    return "Hello, LangChain!"
+\`\`\`
+
+`,
+        'code-bash': `
+\`\`\`bash
+# Your bash commands here
+pip install langchain
+\`\`\`
+
+`,
+        section: `
+## New Section
+
+Your content here...
+
+`
+      };
+    }
+    
+    insertTemplate(templateName) {
+      const template = this.templates[templateName];
+      if (template) {
+        this.replaceSelection(template);
+      }
+    }
+    
+    autoSave() {
+      // Auto-save to localStorage
+      localStorage.setItem('blog-draft', this.editor.value);
+    }
+    
+    savePost() {
+      const content = this.editor.value;
+      const title = this.extractTitle(content);
+      
+      // In a real app, this would save to a backend
+      console.log('Saving post:', { title, content });
+      
+      // For now, just download as file
+      this.downloadAsFile(content, title);
+    }
+    
+    extractTitle(content) {
+      const titleMatch = content.match(/title:\s*["']([^"']+)["']/);
+      return titleMatch ? titleMatch[1] : 'untitled-post';
+    }
+    
+    downloadAsFile(content, title) {
+      const blob = new Blob([content], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${title.toLowerCase().replace(/\s+/g, '-')}.mdx`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+  }
+  
+  // Initialize editor when DOM is loaded
+  document.addEventListener('DOMContentLoaded', () => {
+    new BlogEditor();
+    
+    // Load any saved draft
+    const savedDraft = localStorage.getItem('blog-draft');
+    if (savedDraft) {
+      document.getElementById('blog-editor').value = savedDraft;
+    }
+  });
+</script>
